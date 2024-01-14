@@ -109,28 +109,41 @@ static void PrintInfo(const tinyobj::attrib_t& attrib,
   std::cout << "# of normals   : " << (attrib.normals.size() / 3) << std::endl;
   std::cout << "# of texcoords : " << (attrib.texcoords.size() / 2)
             << std::endl;
+  std::cout << "# of weights   : " << attrib.skin_weights.size() << std::endl;
 
   std::cout << "# of shapes    : " << shapes.size() << std::endl;
   std::cout << "# of materials : " << materials.size() << std::endl;
 
   for (size_t v = 0; v < attrib.vertices.size() / 3; v++) {
-    printf("  v[%ld] = (%f, %f, %f)\n", static_cast<long>(v),
+    printf("  v[%ld] = ( %f, %f, %f )\n", static_cast<long>(v),
            static_cast<const double>(attrib.vertices[3 * v + 0]),
            static_cast<const double>(attrib.vertices[3 * v + 1]),
            static_cast<const double>(attrib.vertices[3 * v + 2]));
   }
 
   for (size_t v = 0; v < attrib.normals.size() / 3; v++) {
-    printf("  n[%ld] = (%f, %f, %f)\n", static_cast<long>(v),
+    printf("  n[%ld] = ( %f, %f, %f )\n", static_cast<long>(v),
            static_cast<const double>(attrib.normals[3 * v + 0]),
            static_cast<const double>(attrib.normals[3 * v + 1]),
            static_cast<const double>(attrib.normals[3 * v + 2]));
   }
 
   for (size_t v = 0; v < attrib.texcoords.size() / 2; v++) {
-    printf("  uv[%ld] = (%f, %f)\n", static_cast<long>(v),
+    printf("  uv[%ld] = ( %f, %f )\n", static_cast<long>(v),
            static_cast<const double>(attrib.texcoords[2 * v + 0]),
            static_cast<const double>(attrib.texcoords[2 * v + 1]));
+  }
+
+  for (size_t v = 0; v < attrib.skin_weights.size(); v++) {
+    printf("  w[%i] = (", attrib.skin_weights[v].vertex_id);
+    for (size_t w = 0; w < attrib.skin_weights[v].weightValues.size(); w++) {
+      printf(" %i, %f", attrib.skin_weights[v].weightValues[w].joint_id,
+           static_cast<const double>(attrib.skin_weights[v].weightValues[w].weight));
+      if (w < (attrib.skin_weights[v].weightValues.size() - 1)) {
+        printf(",");
+      }
+    }
+    printf(" )\n");
   }
 
   // For each shape
